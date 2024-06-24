@@ -1,66 +1,50 @@
 @extends('layouts.app')
 @section('title', 'titulados')
 @section('content')
-<style>
-  .modal2-container {
-    display: flex;
-    background-color: rgba(0, 0, 0, 0.3);
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    pointer-events: none;
-    opacity: 0;  
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    transition: opacity 0.3s ease;
-  }
-  
-  .show {
-    pointer-events: auto;
-    opacity: 1;
-  }
-  
-  .modal2 {
-    background-color: #fff;
-    width: 600px;
-    max-width: 100%;
-    padding: 30px 50px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    text-align: center;
-  }
-  
-  .modal2 h1 {
-    margin: 0;
-  }
-  
-  .modal2 p {
-    opacity: 0.7;
-    font-size: 14px;
-  }
-  </style>
 <div class="main-panel">
-  <div class="content-wrapper">
-    <div class="page-header">
-      <h3 class="page-title"></h3>
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="#"></a></li>
-          <li class="breadcrumb-item active" aria-current="page">  </li>
-        </ol>
-      </nav>
-    </div>
+    @if (session()->has('status') || session()->has('success') || session()->has('error') || $errors->any())
+              @php
+                $alerts = [
+                  'status' => 'alert-success',
+                  'success' => 'alert-success',
+                  'error' => 'alert-danger',
+                ];
+              @endphp
+
+              @foreach ($alerts as $key => $class)
+                @if (session()->has($key))
+                  <div class="alert {{ $class }} alert-dismissible fade show" role="alert">
+                    {{ session($key) }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                @endif
+              @endforeach
+
+              @if ($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <ul>
+                    @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                    @endforeach
+                  </ul>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              @endif
+            @endif
+  
     <div class="row">
       <div class="col-lg-12 grid-margin stretch-card">
         <div class="card">
           <div class="card-body">
-            <div class="page-header flex-wrap">
+            <div class="flex-wrap page-header">
               <h3 class="mb-0"> Administradores <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block"></span>
               </h3>
               <div class="d-flex">
-                <button type="button" class="btn btn-primary btn-rounded btn-fw"> Nuevo Usuario </button>
+                <button type="button" class="btn btn-primary btn-rounded btn-fw open-modal" data-action="create">Nuevo Usuario</button>
               </div>
             </div>
             <div class="table-responsive">
@@ -72,21 +56,20 @@
                     <th>Correo</th>
                     <th>Estado</th>
                     <th>Editar</th>
-                    <th>Eliminar</th>
                   </tr>
                 </thead>
                 <tbody>                
-                  @foreach($usuarios as $usuarios)
+                  @foreach($usuarios as $usuario)
                       <tr>
                           <td class="py-1">
                             <img src="../../assetsDash/images/faces-clipart/pic-1.png" alt="image" />
                           </td>
-                          <td>{{ $usuarios->name }}</td>
-                          <td>{{ $usuarios->email }}</td>
-                          @if ($usuarios->estado == 1)
+                          <td>{{ $usuario->name }}</td>
+                          <td>{{ $usuario->email }}</td>
+                          @if ($usuario->estado == 1)
                             <td>
                               
-                              <form method="POST" action="{{route('profile.disable', $usuarios->id)}}" >
+                              <form method="POST" action="{{route('profile.disable', $usuario->id)}}" >
                                 {{-- @dump(Auth::user()->id) --}}
                                 
                                 @csrf
@@ -96,7 +79,7 @@
                             </td>
                           @else
                              <td>
-                              <form method="POST" action="{{route('profile.disable', $usuarios->id)}}" >
+                              <form method="POST" action="{{route('profile.disable', $usuario->id)}}" >
                                 {{-- @dump(Auth::user()->id) --}}
                                 
                                 @csrf
@@ -107,88 +90,143 @@
                           @endif
                           {{-- <td>{{ $usuarios->estado }}</td> --}}
                           <td>
-                            <button type="button" class="btn btn-dark btn-icon-text open-modal" data-id="{{ $usuarios->id }}" data-action="edit" data-name="{{ $usuarios->name }}" data-email="{{ $usuarios->email }}">
+                            <button type="button" class="btn btn-dark btn-icon-text open-modal" data-id="{{ $usuario->id }}" data-action="edit" data-name="{{ $usuario->name }}" data-email="{{ $usuario->email }}">
                               <i class="mdi mdi-file-check btn-icon-append"></i> Editar
-                            </button>
-                          </td>
-                          <td>
-                            <button type="button" class="btn btn-warning btn-icon-text open-modal" data-id="{{ $usuarios->id }}" data-action="delete">
-                              <i class="mdi mdi-alert btn-icon-prepend"></i> Eliminar
                             </button>
                           </td>
                       </tr>
                       @endforeach
                 </tbody>
               </table>
-              <!-- Modal container outside the loop to reuse it -->
             </div>
+            <div class="pagination-container">
+              <ul class="pagination">
+                  {{-- Botón "Previous" --}}
+                  <li class="page-item {{ $usuarios->onFirstPage() ? 'disabled' : '' }}">
+                      <a class="page-link" href="{{ $usuarios->previousPageUrl() }}" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                          <span class="sr-only">Atras</span>
+                      </a>
+                  </li>
+                  
+                  {{-- Páginas enumeradas --}}
+                  @for ($i = 1; $i <= $usuarios->lastPage(); $i++)
+                      <li class="page-item {{ $usuarios->currentPage() == $i ? 'active' : '' }}">
+                          <a class="page-link" href="{{ $usuarios->url($i) }}">{{ $i }}</a>
+                      </li>
+                  @endfor
+                  
+                  {{-- Botón "Next" --}}
+                  <li class="page-item {{ !$usuarios->hasMorePages() ? 'disabled' : '' }}">
+                      <a class="page-link" href="{{ $usuarios->nextPageUrl() }}" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                          <span class="sr-only">Siguiente</span>
+                      </a>
+                  </li>
+              </ul>
+          </div>
+          
           </div>
         </div>
       </div>
     </div>
   </div>
- <!-- Modal container outside the loop to reuse it -->
-<div id="modal2_container" class="modal2-container">
-  <div class="modal2">
-    <h1 id="modal-title">Ventana Modal</h1>
-    <div id="modal-content">
-      <!-- Modal content will be injected here -->
+ <!-- Modal -->
+ <div id="modal2_container" class="modal2-container">
+  <div class="modal2 card">
+    <div class="card-body">
+      <h4 id="modal-title" class="card-title">Ventana Modal</h4>
+      <div id="modal-content">
+        <!-- Modal content will be injected here -->
+      </div>
+      <button id="close" class="btn btn-light btn-fw-modal">Cerrar</button>
     </div>
-    <button id="close">Cerrar</button>
   </div>
 </div>
 
 <script>
   document.querySelectorAll('.open-modal').forEach(button => {
-  button.addEventListener('click', () => {
-    const id = button.getAttribute('data-id');
-    const action = button.getAttribute('data-action');
-    const modalContainer = document.getElementById('modal2_container');
-    const modalTitle = document.getElementById('modal-title');
-    const modalContent = document.getElementById('modal-content');
+    button.addEventListener('click', () => {
+      const id = button.getAttribute('data-id');
+      const action = button.getAttribute('data-action');
+      const modalContainer = document.getElementById('modal2_container');
+      const modalTitle = document.getElementById('modal-title');
+      const modalContent = document.getElementById('modal-content');
 
-    if (action === 'edit') {
-      const name = button.getAttribute('data-name');
-      const email = button.getAttribute('data-email');
-      modalTitle.innerText = 'Editar Usuario';
-      modalContent.innerHTML = `
-        <form id="edit-form" method="POST" action="{{ route('profile.update') }}">
-          @csrf
-          @method('PATCH')
-          <input type="hidden" name="id" value="${id}">
-          <input type="hidden" name="source" value="table">
-          <div>
-            <label for="name">Nombre</label>
-            <input type="text" name="name" id="name" value="${name}" required>
-          </div>
-          <div>
-            <label for="email">Correo</label>
-            <input type="email" name="email" id="email" value="${email}" required>
-          </div>
-          <button type="submit">Guardar Cambios</button>
-        </form>
-      `;
-    } else if (action === 'delete') {
-      modalTitle.innerText = 'Eliminar Usuario';
-      modalContent.innerHTML = `
-        <p>¿Estás seguro de que quieres eliminar este usuario?</p>
-        <form id="delete-form" method="POST" action="/profile/${id}">
-          @csrf
-          @method('DELETE')
-          <button type="submit">Eliminar</button>
-        </form>
-      `;
-    }
+      if (action === 'create') {
+        modalTitle.innerText = 'Nuevo Usuario';
+        modalContent.innerHTML = `
+          <form id="create-form" class="forms-sample" method="POST" action="{{ route('admin.users.storeFromAdmin') }}">
+            @csrf
+            <div class="form-group row">
+              <label for="name" class="col-sm-3 col-form-label">Nombre</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="name" id="name" required>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="email" class="col-sm-3 col-form-label">Correo</label>
+              <div class="col-sm-9">
+                <input type="email" class="form-control" name="email" id="email" required>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="password" class="col-sm-3 col-form-label">Contraseña</label>
+              <div class="col-sm-9">
+                <input type="password" class="form-control" name="password" id="password" required>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="password_confirmation" class="col-sm-3 col-form-label">Confirmar Contraseña</label>
+              <div class="col-sm-9">
+                <input type="password" class="form-control" name="password_confirmation" id="password_confirmation" required>
+              </div>
+            </div>
+            <button type="submit" class="mr-2 btn-fw-modal btn-primary">Crear Usuario</button>
+          </form>
+        `;
+      } else if (action === 'edit') {
+        const name = button.getAttribute('data-name');
+        const email = button.getAttribute('data-email');
+        modalTitle.innerText = 'Editar Usuario';
+        modalContent.innerHTML = `
+          <form id="edit-form" class="forms-sample" method="POST" action="{{ route('profile.updateFromModal') }}">
+            @csrf
+            @method('PATCH')
+            <input type="hidden" name="id" value="${id}">
+            <div class="form-group row">
+              <label for="name" class="col-sm-3 col-form-label">Nombre</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="name" id="name" value="${name}" required>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="email" class="col-sm-3 col-form-label">Correo</label>
+              <div class="col-sm-9">
+                <input type="email" class="form-control" name="email" id="email" value="${email}" required>
+              </div>
+            </div>
+            <button type="submit" class="mr-2 btn-fw-modal btn-primary">Guardar Cambios</button>
+          </form>
+        `;
+      }
 
-    modalContainer.classList.add('show');
+      modalContainer.classList.add('show');
+    });
   });
-});
 
-document.getElementById('close').addEventListener('click', () => {
-  document.getElementById('modal2_container').classList.remove('show');
-});
+  document.getElementById('close').addEventListener('click', () => {
+    document.getElementById('modal2_container').classList.remove('show');
+  });
 
+  // Close alert
+  document.querySelectorAll('.alert .close').forEach(button => {
+      button.addEventListener('click', () => {
+        button.parentElement.style.display = 'none';
+      });
+    });
 </script>
+</div>
 @endsection
 
 

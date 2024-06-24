@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
@@ -12,14 +12,15 @@
     <link rel="stylesheet" href="assetsDash/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css" />
     <link rel="stylesheet" href="assetsDash/css/style.css" />
     <link rel="shortcut icon" href="assetsDash/images/favicon.png" />
+    
   </head>
   <body>
     <div class="container-scroller">
         {{-- start del sidebar --}}
       @include('layouts.menuSide')
       {{-- end del sidebar --}}
+      @include('layouts.sidebar')
       <div class="container-fluid page-body-wrapper">
-        @include('layouts.sidebar')
         {{-- panel de documento dashboard --}}
         @yield('content')        
         <!-- main-panel ends -->

@@ -25,21 +25,15 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="pages/icons/mdi.html">
-          <i class="mdi mdi-contacts menu-icon"></i>
-          <span class="menu-title">adminsitradores</span>
-        </a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-          <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-          <span class="menu-title">Listar</span>
+          <i class="mdi mdi-account-multiple-outline menu-icon"></i>
+          <span class="menu-title">Usuarios</span>
           <i class="menu-arrow"></i>
         </a>
         <div class="collapse" id="ui-basic">
           <ul class="nav flex-column sub-menu">
             <li class="nav-item">
-              <a class="nav-link" href="{{route('list.titulados')}}">Administradores</a>
+              <a class="nav-link" href="{{route('list.titulados')}}">Listar <br>administradores</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="pages/ui-features/dropdowns.html">Administrar <br>Titulados</a>
@@ -54,10 +48,21 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="pages/forms/basic_elements.html">
-          <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-          <span class="menu-title">Encuestas </span>
+        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+          <i class="mdi mdi-chart-line menu-icon"></i>
+          <span class="menu-title">Encuestas</span>
+          <i class="menu-arrow"></i>
         </a>
+        <div class="collapse" id="ui-basic">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('encuesta.index')}}">Listar <br>Encuesta</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{route('encuesta.create')}}">Crear <br>Encuestas</a>
+            </li>
+          </ul>
+        </div>
       </li>
       <li class="nav-item sidebar-actions">
         <div class="nav-link">

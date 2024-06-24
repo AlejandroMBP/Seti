@@ -10,8 +10,9 @@ return new class extends Migration
     {
         Schema::create('preguntas_respondidas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_encuesta')->constrained('encuestas');
-            $table->foreignId('id_pregunta')->constrained('preguntas');
+            $table->foreignId('id_encuesta')->constrained('encuestas')->onDelete('cascade');
+            $table->foreignId('id_pregunta')->constrained('preguntas')->onDelete('cascade');
+            $table->foreignId('id_usuario')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

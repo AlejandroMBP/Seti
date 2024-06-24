@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('preguntas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_encuesta')->constrained('encuestas');
+            $table->foreignId('id_encuesta')->constrained('encuestas')->onDelete('cascade');
             $table->text('enunciado');
-            $table->string('tipo');
+            $table->enum('tipo', ['verdadero_falso', 'seleccion_multiple']);
             $table->timestamps();
         });
     }

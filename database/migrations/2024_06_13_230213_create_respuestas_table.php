@@ -10,9 +10,9 @@ return new class extends Migration
     {
         Schema::create('respuestas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_pregunta_respondida')->constrained('preguntas_respondidas');
-            $table->string('respuesta_texto')->nullable();
-            // Puedes agregar más columnas según sea necesario para tu caso específico
+            $table->foreignId('id_pregunta_respondida')->constrained('preguntas_respondidas')->onDelete('cascade');
+            $table->foreignId('id_opcion_pregunta')->constrained('opciones_preguntas')->onDelete('cascade')->nullable(); // Para selección múltiple
+            $table->boolean('respuesta_bool')->nullable(); // Para verdadero o falso
             $table->timestamps();
         });
     }

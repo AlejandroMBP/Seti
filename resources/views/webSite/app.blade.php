@@ -37,7 +37,7 @@
 		<link rel="stylesheet" href="assets/css/slick-theme.css">					
 		<!-- Style CSS -->
 		<link rel="stylesheet" href="assets/css/style.css">		
-
+        
 	</head>
 	
     <body data-spy="scroll" data-offset="80">
@@ -52,6 +52,11 @@
         @include('webSite.layoutSItes.header') 	  
 		<!-- END NAVBAR -->
         <main>
+            @if (session('especial'))
+              <div class="alert alert-success">
+                {{ session('especial') }}
+              </div>
+            @endif
             @yield('content')
         </main>
         <!-- START FOOTER -->

@@ -15141,8 +15141,10 @@ dl {
       display: inline-block; } }
 
 /* Layouts */
+
 .navbar.fixed-top + .page-body-wrapper {
   padding-top: 70px; }
+
 
 @media (min-width: 992px) {
   .sidebar-mini .page-body-wrapper {
@@ -15478,5 +15480,104 @@ dl {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1; }
+
+/* 
+estilos de la pantalla modal y las paginaciones*/
+.modal2-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.modal2-container.show {
+  display: flex;
+}
+
+.modal2 {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 100%;
+}
+
+
+#modal-title {
+  margin-bottom: 20px;
+}
+
+.btn-fw-modal {
+  width: 100%;
+}
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table td {
+    max-width: 200px; /* Ajusta este valor según sea necesario */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pagination-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+}
+
+.pagination .page-item {
+    display: inline-block;
+    margin-right: 10px; /* Espacio entre elementos */
+    border-radius: 50%;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: auto;
+    background-color: #fff;
+    border-color: #ddd;
+    border-radius: 50%;
+}
+
+.pagination .page-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    line-height: 1.25;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    border-radius: 50%;
+}
+
+.pagination .page-link:hover {
+    z-index: 2;
+    color: #0056b3;
+    background-color: #e9ecef;
+    border-color: #ddd;
+    border-radius: 50%;
+}
+
+.pagination .page-link:focus {
+    z-index: 3;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    border-radius: 50%;
+}
 
 /*# sourceMappingURL=style.css.map */

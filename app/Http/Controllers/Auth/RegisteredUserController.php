@@ -24,6 +24,17 @@ class RegisteredUserController extends Controller
     }
 
     /**
+     * Display the list of users and the registration form in admin view.
+     */
+    public function index():View
+    {
+        $usuarios = User::all(); // Obtener todos los usuarios
+
+        return view('components.listarAministrador', compact('usuarios')); // Cambiar a la vista adecuada
+    
+    }
+
+    /**
      * Handle an incoming registration request.
      *
      * @throws \Illuminate\Validation\ValidationException
@@ -32,7 +43,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -47,5 +58,29 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
+    }
+
+    /**
+     * Handle the registration request from admin view.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function storeFromAdmin(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        event(new Registered($user));
+
+        return redirect()->route('list.titulados')->with('status', 'Usuario creado exitosamente');
     }
 }
